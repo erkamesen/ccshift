@@ -1,0 +1,293 @@
+{
+  "name": "ccshift",
+  "displayName": "ccshift: Account Switcher for Claude Code",
+  "description": "Register multiple Claude Code accounts once, switch between them in one click, and watch 5-hour and weekly usage for all of them.",
+  "version": "0.1.0",
+  "publisher": "erkamesen",
+  "author": "Erkam Esen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erkamesen/ccshift.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erkamesen/ccshift/issues"
+  },
+  "homepage": "https://github.com/erkamesen/ccshift#readme",
+  "private": true,
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "anthropic",
+    "accounts",
+    "usage"
+  ],
+  "main": "./out/src/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "tsc -p ./ --noEmit",
+    "test:unit": "npm run compile && node --test \"out/test/unit/**/*.test.js\"",
+    "test:integration": "npm run compile && node out/test/integration/runTest.js",
+    "test": "npm run test:unit && npm run test:integration",
+    "package": "npm run compile && vsce package --no-dependencies --out ccshift.vsix"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "~1.95.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "~5.9.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "ccshift.addAccount",
+        "title": "Add Account",
+        "category": "ccshift",
+        "icon": "$(add)"
+      },
+      {
+        "command": "ccshift.switchAccount",
+        "title": "Switch Account",
+        "category": "ccshift",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "ccshift.quickToggle",
+        "title": "Quick Toggle",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.openDashboard",
+        "title": "Open Dashboard",
+        "category": "ccshift",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "ccshift.refreshUsage",
+        "title": "Refresh Usage",
+        "category": "ccshift",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ccshift.renameAccount",
+        "title": "Rename Account",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.removeAccount",
+        "title": "Remove Account",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.setWorkspaceAccount",
+        "title": "Set Workspace Account",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.setDefaultAccount",
+        "title": "Set Default Account",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.reauthenticate",
+        "title": "Reauthenticate",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.diagnose",
+        "title": "Diagnose Integration",
+        "category": "ccshift",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "ccshift.installUsageCollector",
+        "title": "Install Usage Collector (Status Line)",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.removeUsageCollector",
+        "title": "Remove Usage Collector (Status Line)",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.showLogs",
+        "title": "Show Logs",
+        "category": "ccshift"
+      },
+      {
+        "command": "ccshift.cleanUp",
+        "title": "Clean Up Before Uninstall",
+        "category": "ccshift"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ccshift",
+          "title": "ccshift",
+          "icon": "media/accounts.svg"
+        }
+      ]
+    },
+    "views": {
+      "ccshift": [
+        {
+          "type": "webview",
+          "id": "ccshift.dashboard",
+          "name": "Accounts",
+          "icon": "media/accounts.svg",
+          "contextualTitle": "ccshift"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "ccshift.addAccount",
+          "when": "view == ccshift.dashboard",
+          "group": "navigation@1"
+        },
+        {
+          "command": "ccshift.refreshUsage",
+          "when": "view == ccshift.dashboard",
+          "group": "navigation@2"
+        },
+        {
+          "command": "ccshift.diagnose",
+          "when": "view == ccshift.dashboard",
+          "group": "navigation@3"
+        },
+        {
+          "command": "ccshift.setWorkspaceAccount",
+          "when": "view == ccshift.dashboard",
+          "group": "more@1"
+        },
+        {
+          "command": "ccshift.installUsageCollector",
+          "when": "view == ccshift.dashboard",
+          "group": "more@2"
+        },
+        {
+          "command": "ccshift.removeUsageCollector",
+          "when": "view == ccshift.dashboard",
+          "group": "more@3"
+        },
+        {
+          "command": "ccshift.showLogs",
+          "when": "view == ccshift.dashboard",
+          "group": "more@4"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "ccshift.quickToggle",
+          "when": "ccshift.hasMultipleAccounts"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "ccshift.switchAccount",
+        "key": "ctrl+alt+shift+a",
+        "mac": "cmd+alt+shift+a"
+      },
+      {
+        "command": "ccshift.quickToggle",
+        "key": "ctrl+alt+shift+t",
+        "mac": "cmd+alt+shift+t"
+      }
+    ],
+    "configuration": {
+      "title": "ccshift",
+      "properties": {
+        "ccshift.claudePath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "markdownDescription": "Absolute path to a `claude` executable used for sign-in, verification and usage queries. Leave empty to use the CLI bundled with the Claude Code extension, then `claude` on your PATH."
+        },
+        "ccshift.statusBar.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the active Claude account and its 5-hour usage in the status bar."
+        },
+        "ccshift.usage.autoRefreshMinutes": {
+          "type": "number",
+          "default": 15,
+          "minimum": 0,
+          "markdownDescription": "How often to ask Claude Code for each account's usage while a VS Code window is focused (`claude -p /usage`, which makes no model request). `0` turns automatic refresh off."
+        },
+        "ccshift.usage.staleAfterMinutes": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "description": "Usage data older than this is marked stale."
+        },
+        "ccshift.recommendations.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Suggest another account when the active one is close to a usage limit. Never switches automatically."
+        },
+        "ccshift.recommendations.warningThreshold": {
+          "type": "number",
+          "default": 80,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Usage percentage that counts as close to the limit."
+        },
+        "ccshift.recommendations.criticalThreshold": {
+          "type": "number",
+          "default": 95,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Usage percentage that counts as at the limit."
+        },
+        "ccshift.recommendations.maxDataAgeMinutes": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "description": "Only recommend accounts whose usage data is at most this old."
+        },
+        "ccshift.workspaceAccount.applyOnOpen": {
+          "type": "string",
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ],
+          "default": "ask",
+          "enumDescriptions": [
+            "Ask before switching to the workspace's account.",
+            "Switch automatically when no Claude Code session is running on the current account; otherwise ask.",
+            "Do nothing."
+          ],
+          "description": "What to do when a workspace with its own account opens while another account is active. Switching affects all windows."
+        },
+        "ccshift.terminal.applyAccount": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Set `CLAUDE_CONFIG_DIR` in integrated terminals so `claude` started there uses the selected account."
+        },
+        "ccshift.terminal.followWorkspaceAccount": {
+          "type": "boolean",
+          "default": true,
+          "description": "In a workspace with its own account, terminals use that account even when the Claude Code panel uses another one. This is how two windows can use two accounts at once from the CLI."
+        }
+      }
+    }
+  }
+}
